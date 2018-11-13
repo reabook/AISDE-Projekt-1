@@ -24,7 +24,7 @@ namespace AISDE_Projekt_1 {
 
         public void CalculateCost(Vertex a, Vertex b) { 
 
-            Cost = Math.Sqrt(Math.Pow(b.X - a.X, 2) + Math.Pow(b.Y - a.X, 2));
+            Cost = Math.Sqrt(Math.Pow(b.X - a.X, 2) + Math.Pow(b.Y - a.Y, 2));
 
         }
     }

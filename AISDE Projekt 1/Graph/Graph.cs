@@ -96,21 +96,6 @@ namespace AISDE_Projekt_1 {
                 graph.FindNode(edge.End.ID.ToString()).Attr.Shape = Shape.Circle;
 
             }
-
-            //if (Algorithm.Equals("SCIEZKA")) {
-            //    graph.FindNode(Path.Begin.ID.ToString()).Attr.FillColor = Color.Green; // poczatkek sciezki na zielono
-            //    graph.FindNode(Path.End.ID.ToString()).Attr.FillColor = Color.Red; // koniec sciezki na niebiesko
-
-            //    foreach (var edge in graph.Edges) {
-            //        for (int i = 0; i < Path.Nodes.Count - 1; i++) {
-            //            if (edge.SourceNode.Id.Equals(Path.Nodes[i].ToString()) && edge.TargetNode.Id.Equals(Path.Nodes[i + 1].ToString()) ||
-            //                edge.TargetNode.Id.Equals(Path.Nodes[i].ToString()) && edge.SourceNode.Id.Equals(Path.Nodes[i + 1].ToString())) {
-            //                edge.Attr.Color = Color.Red;
-            //            }
-            //        }
-            //    }
-            //    SetCost(form, Path.Cost);
-            //}
                 ShowGraph(form, viewer, graph);
             
         }

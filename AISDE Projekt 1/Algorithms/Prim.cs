@@ -41,29 +41,24 @@ namespace AISDE_Projekt_1 {
             var begin = vertices[0];
             tree.Add(begin);
 
-            foreach (var neighbour in begin.Neighbours) {
-                queue.Add(neighbour);
+            foreach (var neighbour in begin.Neighbours) { // dodanie do kolejki sasiadow pierwszego wierzcholka
+                AddWithoutReplies(queue, neighbour);
             }
 
             while(tree.Count != vertices.Count) {
-                int i = 0;
+                var nextVertex = queue[0]; // wybranie najblizszego wierzcholka 
+              
+                tree.Add(nextVertex.ver); // dodanie do drzewa MST 
+                MSTedges.Add(nextVertex.edg); // dodanie do drzewa MST
 
-                var nextVertex = queue[0];
-                while (tree.Contains(nextVertex.ver) && i < queue.Count) {
-                    nextVertex = queue[i];
-                    i++;
+                Console.WriteLine("ogarniam " + nextVertex.ver.ID);
+
+                foreach (var neighbour in nextVertex.ver.Neighbours) { // dodanie sasiadow aktualnie rozpatrywanego wierzcholka
+                    AddWithoutReplies(queue, neighbour);
                 }
 
-                tree.Add(nextVertex.ver);
-                MSTedges.Add(nextVertex.edg);
-
-                queue.Remove(nextVertex);
-
-                foreach (var neighbour in nextVertex.ver.Neighbours) {
-                    queue.Add(neighbour);
-                }
-
-                queue.Sort((v1, v2) => v1.edg.Cost.CompareTo(v2.edg.Cost));
+                RemoveUsedFromQueue(tree, queue); // usuniecie niepotrzebnych (wykorzystanych) wierzcholkow
+                queue.Sort((v1, v2) => v1.edg.Cost.CompareTo(v2.edg.Cost)); // przesortowanie wzgledem kosztu
             }
 
             foreach (var edge in MSTedges) {
@@ -72,5 +67,18 @@ namespace AISDE_Projekt_1 {
 
             return MSTedges;
         }
+
+        private void RemoveUsedFromQueue(List<PVertex> tree, List<(PVertex ver, Edge edg)> queue) {
+            foreach (var vertex in tree) {
+                queue.RemoveAll(v => v.ver.ID.Equals(vertex.ID));
+            }
+        }
+
+        private void AddWithoutReplies(List<(PVertex ver, Edge edg)> queue, (PVertex ver, Edge edg) neighbour) {
+            if (!queue.Contains(neighbour))
+                queue.Add(neighbour);
+        }
     }
 }
+
+
