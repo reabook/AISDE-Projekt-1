@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace AISDE_Projekt_1 {
     public class Dijkstra : IAlgorithm{
 
-        private Graph graph;
         const double INFINITY = Double.MaxValue;
 
         private DVertex begin;
@@ -17,12 +16,11 @@ namespace AISDE_Projekt_1 {
         private List<DVertex> vertices = new List<DVertex>();
         private List<Edge> edges = new List<Edge>();
 
-        public Dijkstra(Graph graph, int start, int end) {
-            this.graph = graph;
+        public Dijkstra(Graph graph, int start, int end) : this(graph.Vertices.Values.ToList(), graph.Edges, start, end) {}
 
-            // przepisanie Vertex na DVertex i ustawianie dystansu na nieskonczonosc
-            foreach (var vertex in graph.Vertices) {
-                this.vertices.Add(new DVertex((null, null), vertex.Value, INFINITY));
+        public Dijkstra(List<Vertex> vertices, List<Edge> edges, int start, int end) {
+            foreach (var vertex in vertices) {
+                this.vertices.Add(new DVertex((null, null), vertex, INFINITY));
             }
 
             // przepisanie poczatku i konca na DVertex
@@ -30,7 +28,7 @@ namespace AISDE_Projekt_1 {
             this.end = this.vertices.Find(v => v.ID.Equals(end));
 
             // dodanie krawedzi
-            this.edges = graph.Edges;
+            this.edges = edges;
 
             // dodanie wszystkim wierzcholkom sasiadow
             foreach (var edge in edges) {
@@ -40,12 +38,9 @@ namespace AISDE_Projekt_1 {
                 fv.AddNeighbours(sv, edge);
                 sv.AddNeighbours(fv, edge);
             }
-
-
             //foreach (var vertex in this.vertices) {
             //    vertex.Neighbours.Sort((v1, v2) => v1.edg.Cost.CompareTo(v2.edg.Cost));
             //}
-
         }
 
         public List<Edge> ProcessPath() {
@@ -74,7 +69,7 @@ namespace AISDE_Projekt_1 {
             }
             Console.WriteLine("KONIEC");
 
-            // wyswietlenie trasy i kosztu
+            // zwrocenie trasy
 
             List<Edge> edglist = new List<Edge>();
             DVertex temp = this.end;
@@ -85,7 +80,7 @@ namespace AISDE_Projekt_1 {
             }
             double cost = temp.Distance;
 
-            // stworzenie sciezki
+            // stworzenie trasy
             while (temp.Previous.edg != null) {
                 edglist.Add(temp.Previous.edg);
                 temp = temp.Previous.ver;

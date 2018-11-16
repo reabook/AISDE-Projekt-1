@@ -11,13 +11,8 @@ namespace AISDE_Projekt_1 {
     public class Graph {
 
         Microsoft.Msagl.Drawing.Graph graph;
-        public int NumberOfVertices { get; private set; }
-        public int NumberOfEdges { get; private set; }
         public Dictionary<int, Vertex> Vertices { get; set; } = new Dictionary<int, Vertex>();
         public List<Edge> Edges { get; set; } = new List<Edge>();
-
-        public Path Path { get; set; }
-        public List<Path> FloydPaths { get; set; } = new List<Path>();
 
         public TextBox Txt { get; set; } = new TextBox();
         public System.Windows.Forms.Label Lbl { get; set; } = new System.Windows.Forms.Label();
@@ -25,6 +20,11 @@ namespace AISDE_Projekt_1 {
 
         public Graph(string filePath) {
             LoadFromFile(filePath);
+        }
+
+        public Graph(Dictionary<int, Vertex> vertices, List<Edge> edges) {
+            this.Vertices = vertices;
+            this.Edges = edges;
         }
 
         private void LoadFromFile(string filePath) {
@@ -36,7 +36,7 @@ namespace AISDE_Projekt_1 {
 
                         if (parts[0][0] != '#') {
                             if (parts[0] == "WEZLY") {
-                                NumberOfVertices = int.Parse(parts[2]);
+                                int NumberOfVertices = int.Parse(parts[2]);
 
                                 for (int i = 0; i < NumberOfVertices; i++) {
                                     line = reader.ReadLine();
@@ -49,7 +49,7 @@ namespace AISDE_Projekt_1 {
                                     Vertices.Add(int.Parse(parts[0]), new Vertex(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2])));
                                 }
                             } else if (parts[0] == "LACZA") {
-                                NumberOfEdges = int.Parse(parts[2]);
+                                int NumberOfEdges = int.Parse(parts[2]);
 
                                 for (int i = 0; i < NumberOfEdges; i++) {
                                     line = reader.ReadLine();
@@ -159,6 +159,16 @@ namespace AISDE_Projekt_1 {
             form.Controls.Add(viewer);
             form.ResumeLayout();
             form.ShowDialog();
+        }
+
+        public List<Edge> minimumSpanningTree() {
+            Prim prim = new Prim(this);
+            return prim.ProcessPath();
+        }
+
+        public List<Edge> shortestPath(int a, int b) {
+            Dijkstra dij = new Dijkstra(this, a, b);
+            return dij.ProcessPath();
         }
     }
 }

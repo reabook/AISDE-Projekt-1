@@ -10,15 +10,11 @@ namespace AISDE_Projekt_1 {
         public List<(PVertex ver, Edge edg)> Neighbours { get; set; } = new List<(PVertex ver, Edge edg)>();
         public PVertex Previous { get; set; }
 
-        public PVertex(PVertex previous, Vertex vertex) {
-            this.Previous = previous;
+        public PVertex(Vertex vertex) {
             this.ID = vertex.ID;
             this.X = vertex.X;
             this.Y = vertex.Y;
         }
-        //public PVertex(PVertex previous, Vertex vertex, double dist) : this(previous, vertex) {
-        //    this.Distance = dist;
-        //}
 
         public bool Equals(Vertex v) {
             return (v.ID == this.ID && v.X == this.X && v.Y == this.Y);

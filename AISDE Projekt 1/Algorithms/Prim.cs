@@ -7,18 +7,15 @@ using System.Threading.Tasks;
 
 namespace AISDE_Projekt_1 {
     public class Prim : IAlgorithm {
-        private Graph graph;
 
         private List<PVertex> vertices = new List<PVertex>();
         private List<Edge> edges = new List<Edge>();
-        public Prim(Graph graph) {
-            this.graph = graph;
 
-            // dodanie krawedzi
-            this.edges = graph.Edges;
+        public Prim(Graph graph) : this(graph.Vertices.Values.ToList(), graph.Edges) {}
 
-            foreach (var vertex in graph.Vertices) {
-                this.vertices.Add(new PVertex(null, vertex.Value));
+        public Prim(List<Vertex> vertices, List<Edge> edges) {
+            foreach (var vertex in vertices) {
+                this.vertices.Add(new PVertex(vertex));
             }
 
             // dodanie wszystkim wierzcholkom sasiadow
@@ -29,14 +26,15 @@ namespace AISDE_Projekt_1 {
                 fv.AddNeighbours(sv, edge);
                 sv.AddNeighbours(fv, edge);
             }
+
             foreach (var vertex in this.vertices) {
                 vertex.Neighbours.Sort((v1, v2) => v1.edg.Cost.CompareTo(v2.edg.Cost));
             }
         }
         public List<Edge> ProcessPath() {
             var tree = new List<PVertex>();
-            var queue = new List<(PVertex ver, Edge edg)>();
             var MSTedges = new List<Edge>();
+            var queue = new List<(PVertex ver, Edge edg)>();
 
             var begin = vertices[0];
             tree.Add(begin);
@@ -46,23 +44,18 @@ namespace AISDE_Projekt_1 {
             }
 
             while(tree.Count != vertices.Count) {
-                var nextVertex = queue[0]; // wybranie najblizszego wierzcholka 
+                var current = queue[0]; // wybranie najblizszego wierzcholka 
               
-                tree.Add(nextVertex.ver); // dodanie do drzewa MST 
-                MSTedges.Add(nextVertex.edg); // dodanie do drzewa MST
+                tree.Add(current.ver); // dodanie do drzewa MST 
+                MSTedges.Add(current.edg); // dodanie do drzewa MST
 
-                Console.WriteLine("ogarniam " + nextVertex.ver.ID);
 
-                foreach (var neighbour in nextVertex.ver.Neighbours) { // dodanie sasiadow aktualnie rozpatrywanego wierzcholka
+                foreach (var neighbour in current.ver.Neighbours) { // dodanie sasiadow aktualnie rozpatrywanego wierzcholka
                     AddWithoutReplies(queue, neighbour);
                 }
 
                 RemoveUsedFromQueue(tree, queue); // usuniecie niepotrzebnych (wykorzystanych) wierzcholkow
                 queue.Sort((v1, v2) => v1.edg.Cost.CompareTo(v2.edg.Cost)); // przesortowanie wzgledem kosztu
-            }
-
-            foreach (var edge in MSTedges) {
-                Console.WriteLine(edge.Begin.ToString() + " " + edge.End.ToString());
             }
 
             return MSTedges;

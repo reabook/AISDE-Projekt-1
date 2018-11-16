@@ -10,12 +10,10 @@ namespace AISDE_Projekt_1 {
         static void Main(string[] args) {
 
             Graph graph = new Graph("network.txt");
-            //Dijkstra dij = new Dijkstra(graph, 1, 9);
-            Prim prim = new Prim(graph);
-            //dij.ProcessPath();
 
-            //graph.DrawPath(dij.ProcessPath());
-            graph.DrawPath(prim.ProcessPath());
+            //graph.DrawPath(graph.minimumSpanningTree());
+            graph.DrawPath(graph.shortestPath(1, 5));
+
         }
     }
 }
